@@ -1,27 +1,10 @@
 import 'server-only'
 
 import { createArena } from '@aredotna/sdk'
+import { FEATURED_CHANNEL_SLUGS, FEATURED_CHANNEL_TITLES } from '@/config/channels'
 
 const ARENA_API_BASE_URL = 'https://api.are.na'
 const DEFAULT_CHANNEL_SLUG = 'sonic-diversity-zewocbw6otq'
-const DEFAULT_CHANNEL_SLUGS = [
-  'sonic-diversity-zewocbw6otq',
-  'dj-mixes-i-have-enjoyed',
-  'dj-mixes',
-  'i-luv-this-mix-9nia6qlkius',
-  'best-of-dj-mixes',
-  'music-dj-sets-mixes',
-  'night-life-is-so-fun',
-]
-const DEFAULT_CHANNEL_TITLES: Record<string, string> = {
-  'sonic-diversity-zewocbw6otq': '{Kiru + }',
-  'dj-mixes-i-have-enjoyed': 'Lukas W',
-  'dj-mixes': 'Internet Bill',
-  'i-luv-this-mix-9nia6qlkius': 'chris osagie',
-  'best-of-dj-mixes': 'Sam db295e',
-  'music-dj-sets-mixes': 'I \\V N 🗺',
-  'night-life-is-so-fun': 'Sophia Bae',
-}
 const DEFAULT_SITE_TITLE = 'Taste Genealogy'
 const DEFAULT_SITE_DESCRIPTION =
   'A living map of music references, DJ mixes, scenes, atmospheres, and sonic fingerprints.'
@@ -46,11 +29,11 @@ export function getConfiguredChannelSlugs() {
     .map((slug: string) => slug.trim())
     .filter(Boolean)
 
-  return slugs?.length ? slugs : DEFAULT_CHANNEL_SLUGS
+  return slugs?.length ? slugs : FEATURED_CHANNEL_SLUGS
 }
 
 export function getChannelDisplayTitle(slug: string, fallback: string) {
-  return DEFAULT_CHANNEL_TITLES[slug] ?? fallback
+  return FEATURED_CHANNEL_TITLES[slug] ?? fallback
 }
 
 export function getSiteTitle() {

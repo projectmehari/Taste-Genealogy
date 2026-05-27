@@ -2,6 +2,7 @@ import { layout, type PreparedText, prepare } from '@chenglou/pretext'
 
 export type MasonryGridItem = {
   description?: string
+  embedSrc?: string | null
   href: string
   id: number
   image?: {
@@ -10,6 +11,7 @@ export type MasonryGridItem = {
     width?: number | null
   } | null
   title: string
+  url?: string | null
 }
 
 export type PositionedMasonryItem = {
@@ -107,10 +109,12 @@ export function computeMasonryLayout(items: PreparedItem[], containerWidth: numb
       height: itemHeight,
       item: {
         description: fallbackText,
+        embedSrc: item.embedSrc,
         href: item.href,
         id: item.id,
         image: item.image,
         title: item.title,
+        url: item.url,
       },
       mediaHeight,
       metaHeight,

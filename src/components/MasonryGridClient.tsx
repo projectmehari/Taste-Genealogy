@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { type CSSProperties, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { getPlayableLink, InlineAudioPlayer, type PlayableLink } from '@/components/InlineAudioPlayer'
 import {
   computeMasonryLayout,
   type MasonryGridItem,
@@ -19,6 +19,7 @@ export function MasonryGridClient({ initialLayout, items }: MasonryGridClientPro
   const containerRef = useRef<HTMLElement>(null)
   const preparedItemsRef = useRef<ReturnType<typeof prepareMasonryItems> | null>(null)
   const [masonryLayout, setMasonryLayout] = useState(initialLayout)
+  const [player, setPlayer] = useState<PlayableLink | null>(null)
 
   const updateLayout = useCallback(() => {
     const container = containerRef.current
@@ -65,21 +66,35 @@ export function MasonryGridClient({ initialLayout, items }: MasonryGridClientPro
   }, [items, updateLayout])
 
   return (
-    <section
-      aria-label="Blocks"
-      className="thumbnail-grid"
-      ref={containerRef}
-      style={{ height: masonryLayout.height }}
-    >
-      {masonryLayout.items.map((positionedItem) => (
-        <Thumbnail key={positionedItem.item.id} positionedItem={positionedItem} />
-      ))}
-    </section>
+    <>
+      <section
+        aria-label="Blocks"
+        className="thumbnail-grid"
+        ref={containerRef}
+        style={{ height: masonryLayout.height }}
+      >
+        {masonryLayout.items.map((positionedItem) => (
+          <Thumbnail
+            key={positionedItem.item.id}
+            onPlay={setPlayer}
+            positionedItem={positionedItem}
+          />
+        ))}
+      </section>
+      <InlineAudioPlayer onClose={() => setPlayer(null)} player={player} />
+    </>
   )
 }
 
-function Thumbnail({ positionedItem }: { positionedItem: PositionedMasonryItem }) {
+function Thumbnail({
+  onPlay,
+  positionedItem,
+}: {
+  onPlay: (player: PlayableLink) => void
+  positionedItem: PositionedMasonryItem
+}) {
   const { fallbackHeight, item, mediaHeight, metaHeight, width, x, y } = positionedItem
+  const playableLink = getPlayableLink(item.url, item.title, item.embedSrc)
   const thumbnailStyle = {
     height: positionedItem.height,
     transform: `translate3d(${x}px, ${y}px, 0)`,
@@ -87,25 +102,52 @@ function Thumbnail({ positionedItem }: { positionedItem: PositionedMasonryItem }
   } satisfies CSSProperties
 
   return (
-    <Link className="thumbnail" href={item.href} style={thumbnailStyle}>
+    <article className="thumbnail" style={thumbnailStyle}>
       {item.image ? (
-        <span className="thumbnail-media" style={{ height: mediaHeight }}>
-          <img
-            alt={item.title}
-            height={item.image.height ?? undefined}
-            loading="lazy"
-            src={item.image.src}
-            width={item.image.width ?? undefined}
-          />
-        </span>
+        playableLink ? (
+          <button
+            aria-label={`Play ${item.title}`}
+            className="thumbnail-media thumbnail-play-target"
+            onClick={() => onPlay(playableLink)}
+            style={{ height: mediaHeight }}
+            type="button"
+          >
+            <img
+              alt=""
+              height={item.image.height ?? undefined}
+              loading="lazy"
+              src={item.image.src}
+              width={item.image.width ?? undefined}
+            />
+            <span>Play</span>
+          </button>
+        ) : (
+          <a className="thumbnail-media" href={item.href} rel="noreferrer" style={{ height: mediaHeight }} target="_blank">
+            <img
+              alt={item.title}
+              height={item.image.height ?? undefined}
+              loading="lazy"
+              src={item.image.src}
+              width={item.image.width ?? undefined}
+            />
+          </a>
+        )
       ) : (
-        <span className="thumbnail-fallback" style={{ height: fallbackHeight }}>
+        <a className="thumbnail-fallback" href={item.href} rel="noreferrer" style={{ height: fallbackHeight }} target="_blank">
           {item.description || item.title}
-        </span>
+        </a>
       )}
       <span className="thumbnail-meta" style={{ height: metaHeight }}>
-        <span>{item.title}</span>
+        {playableLink ? (
+          <button className="inline-play-button" onClick={() => onPlay(playableLink)} type="button">
+            {item.title}
+          </button>
+        ) : (
+          <a href={item.href} rel="noreferrer" target="_blank">
+            {item.title}
+          </a>
+        )}
       </span>
-    </Link>
+    </article>
   )
 }

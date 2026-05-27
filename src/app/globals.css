@@ -128,6 +128,12 @@ body {
   margin: 0;
 }
 
+html,
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
 .route-progress {
   background: var(--foreground);
   height: 2px;
@@ -186,6 +192,10 @@ main {
   padding: 2rem;
 }
 
+.site-header > * {
+  min-width: 0;
+}
+
 .theme-toggle {
   appearance: none;
   background: transparent;
@@ -214,8 +224,17 @@ main {
 }
 
 .nav-list {
-  display: contents;
+  align-items: baseline;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
   font-size: 1rem;
+  gap: 0.25rem 1.5rem;
+  min-width: 0;
+}
+
+.nav-link {
+  flex: 0 0 auto;
 }
 
 .nav-link[aria-current="page"] {
@@ -349,7 +368,37 @@ main {
 .thumbnail-media {
   background: var(--placeholder);
   display: block;
+  overflow: hidden;
+  position: relative;
   width: 100%;
+}
+
+.thumbnail a,
+.thumbnail button {
+  color: inherit;
+}
+
+.thumbnail-play-target {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  text-align: inherit;
+}
+
+.thumbnail-play-target span {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  bottom: 0.75rem;
+  left: 0.75rem;
+  padding: 0.15rem 0.55rem 0.2rem;
+  position: absolute;
+}
+
+.thumbnail-play-target:hover span,
+.inline-play-button:hover {
+  background: var(--foreground);
+  color: var(--background);
 }
 
 .thumbnail-media img {
@@ -373,9 +422,182 @@ main {
   overflow: hidden;
 }
 
+.inline-play-button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.inline-player {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  bottom: 1rem;
+  box-shadow: 0 0 0 1px var(--background);
+  display: grid;
+  gap: 0.75rem;
+  left: 50%;
+  max-width: min(44rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+  position: fixed;
+  transform: translateX(-50%);
+  width: 44rem;
+  z-index: 20;
+}
+
+.inline-player-bar {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.inline-player-meta {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.inline-player-meta span,
+.inline-player-meta a {
+  font-size: 0.75rem;
+}
+
+.inline-player-meta strong,
+.inline-player-meta a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inline-player-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+}
+
+.inline-player button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.15rem 0.55rem 0.2rem;
+}
+
+.inline-player button:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.inline-player audio,
+.inline-player iframe {
+  border: 0;
+  display: block;
+  width: 100%;
+}
+
+.inline-player iframe {
+  height: 166px;
+}
+
 @media (max-width: 640px) {
+  main {
+    padding: 1.5rem 1rem 8rem;
+  }
+
+  .site-header {
+    align-items: stretch;
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
   .site-header,
   .block-header {
     display: grid;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .nav-list {
+    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    margin-inline: -1rem;
+    overflow-x: auto;
+    padding: 0.55rem 1rem 0.65rem;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  .nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem 0.2rem;
+  }
+
+  .nav-link[aria-current="page"] {
+    background: var(--foreground);
+    color: var(--background);
+    text-decoration: none;
+  }
+
+  .theme-toggle {
+    justify-self: start;
+    margin-left: 0;
+    min-height: 2.25rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .about-section {
+    margin-bottom: 3rem;
+    padding: 1rem;
+  }
+
+  .subnav {
+    margin: 2rem 0;
+  }
+
+  .thumbnail-grid {
+    margin-inline: -0.25rem;
+  }
+
+  .inline-player {
+    bottom: 0;
+    left: 0;
+    max-width: none;
+    padding: 0.65rem;
+    transform: none;
+    width: 100%;
+  }
+
+  .inline-player-bar,
+  .inline-player-actions {
+    align-items: stretch;
+    display: grid;
+  }
+
+  .inline-player-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inline-player iframe {
+    height: 120px;
   }
 }

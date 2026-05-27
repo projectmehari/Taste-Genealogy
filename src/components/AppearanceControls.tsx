@@ -2,21 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { FEATURED_CHANNELS, FEATURED_CHANNEL_SLUGS } from '@/config/channels'
 
-const CHANNEL_SLUGS = [
-  'sonic-diversity-zewocbw6otq',
-  'dj-mixes-i-have-enjoyed',
-  'dj-mixes',
-  'i-luv-this-mix-9nia6qlkius',
-  'best-of-dj-mixes',
-  'music-dj-sets-mixes',
-  'night-life-is-so-fun',
-]
+const CHANNEL_THEMES = new Map(FEATURED_CHANNELS.map((channel) => [channel.slug, channel.theme]))
 
 function channelFromPathname(pathname: string | null) {
   const slug = pathname?.split('/').filter(Boolean)[0]
 
-  if (slug && CHANNEL_SLUGS.includes(slug)) {
+  if (slug && FEATURED_CHANNEL_SLUGS.includes(slug)) {
     return slug
   }
 
@@ -44,6 +37,17 @@ export function AppearanceControls() {
   useEffect(() => {
     document.documentElement.dataset.channel = channelFromPathname(pathname)
   }, [pathname])
+
+  useEffect(() => {
+    const channel = channelFromPathname(pathname)
+    const theme = CHANNEL_THEMES.get(channel)
+
+    if (theme) {
+      document.documentElement.style.setProperty('--page-background', theme[isDark ? 'dark' : 'light'])
+    } else {
+      document.documentElement.style.removeProperty('--page-background')
+    }
+  }, [isDark, pathname])
 
   return (
     <button
