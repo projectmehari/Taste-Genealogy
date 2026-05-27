@@ -94,6 +94,31 @@ export const FEATURED_CHANNELS = [
     title: 'Eric L. Chen',
     theme: { light: '#c77dff', dark: '#35114f' },
   },
+  {
+    slug: 'door-link-log',
+    title: 'Romina Malta',
+    theme: { light: '#ffd6a5', dark: '#43250b' },
+  },
+  {
+    slug: 'music-akv6jlo59zy',
+    title: 'Saeed Ferguson',
+    theme: { light: '#bde0fe', dark: '#102d47' },
+  },
+  {
+    slug: 'club-music-for-the-workday',
+    title: 'Alyana Vera',
+    theme: { light: '#ffc6ff', dark: '#3f1644' },
+  },
+  {
+    slug: 'now-laying',
+    title: '// Yatú',
+    theme: { light: '#caffbf', dark: '#15380f' },
+  },
+  {
+    slug: 'public-hgzhykhlhuo',
+    title: 'o sebo',
+    theme: { light: '#fdffb6', dark: '#403d05' },
+  },
 ] satisfies FeaturedChannel[]
 
 export const FEATURED_CHANNEL_SLUGS = FEATURED_CHANNELS.map((channel) => channel.slug)
