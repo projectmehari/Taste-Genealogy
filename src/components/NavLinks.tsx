@@ -1,7 +1,33 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { FEATURED_CHANNELS } from '@/config/channels'
+
+const CHANNEL_THEMES = new Map(FEATURED_CHANNELS.map((channel) => [channel.slug, channel.theme]))
+
+type NavLinkStyle = CSSProperties & {
+  '--nav-link-bg'?: string
+  '--nav-link-bg-dark'?: string
+}
+
+function slugFromHref(href: string) {
+  return href.split('/').filter(Boolean)[0]
+}
+
+function navLinkStyle(href: string): NavLinkStyle | undefined {
+  const theme = CHANNEL_THEMES.get(slugFromHref(href))
+
+  if (!theme) {
+    return undefined
+  }
+
+  return {
+    '--nav-link-bg': theme.light,
+    '--nav-link-bg-dark': theme.dark,
+  }
+}
 
 type NavItem = {
   href: string
@@ -27,6 +53,7 @@ export function NavLinks({ items }: NavLinksProps) {
             className="nav-link"
             href={item.href}
             key={item.id}
+            style={navLinkStyle(item.href)}
           >
             {item.title}
           </Link>
