@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { AudioPlayerProvider } from '@/components/AudioPlayerProvider'
 import { Nav } from '@/components/Nav'
 import { RouteProgress } from '@/components/RouteProgress'
 import { getSiteUrl } from '@/config/arena'
@@ -42,9 +43,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <RouteProgress />
-        <Nav />
-        <main>{children}</main>
+        <AudioPlayerProvider>
+          <RouteProgress />
+          <Nav />
+          <main>{children}</main>
+        </AudioPlayerProvider>
       </body>
     </html>
   )

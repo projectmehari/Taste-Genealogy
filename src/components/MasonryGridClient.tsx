@@ -1,7 +1,8 @@
 'use client'
 
 import { type CSSProperties, useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { getPlayableLink, InlineAudioPlayer, type PlayableLink } from '@/components/InlineAudioPlayer'
+import { useAudioPlayer } from '@/components/AudioPlayerProvider'
+import { getPlayableLink, type PlayableLink } from '@/components/InlineAudioPlayer'
 import {
   computeMasonryLayout,
   type MasonryGridItem,
@@ -19,7 +20,7 @@ export function MasonryGridClient({ initialLayout, items }: MasonryGridClientPro
   const containerRef = useRef<HTMLElement>(null)
   const preparedItemsRef = useRef<ReturnType<typeof prepareMasonryItems> | null>(null)
   const [masonryLayout, setMasonryLayout] = useState(initialLayout)
-  const [player, setPlayer] = useState<PlayableLink | null>(null)
+  const { play } = useAudioPlayer()
 
   const updateLayout = useCallback(() => {
     const container = containerRef.current
@@ -76,12 +77,11 @@ export function MasonryGridClient({ initialLayout, items }: MasonryGridClientPro
         {masonryLayout.items.map((positionedItem) => (
           <Thumbnail
             key={positionedItem.item.id}
-            onPlay={setPlayer}
+            onPlay={play}
             positionedItem={positionedItem}
           />
         ))}
       </section>
-      <InlineAudioPlayer onClose={() => setPlayer(null)} player={player} />
     </>
   )
 }
