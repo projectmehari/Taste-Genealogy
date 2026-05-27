@@ -119,6 +119,31 @@ export const FEATURED_CHANNELS = [
     title: 'o sebo',
     theme: { light: '#fdffb6', dark: '#403d05' },
   },
+  {
+    slug: 'music-artwork-fq78-thvbpo',
+    title: 'dunya worldwide',
+    theme: { light: '#f4a261', dark: '#4a2107' },
+  },
+  {
+    slug: 'music-for-websites',
+    title: 'garry ing',
+    theme: { light: '#90dbf4', dark: '#073447' },
+  },
+  {
+    slug: 'design-music-88kmittrpwc',
+    title: 'Kate Schurch',
+    theme: { light: '#cfbaf0', dark: '#2f1d4d' },
+  },
+  {
+    slug: 'sound-system-2lfor42t_5e',
+    title: 'nightpoaching',
+    theme: { light: '#f1c0e8', dark: '#47173d' },
+  },
+  {
+    slug: 'music-literature-y7uk8ovdwd4',
+    title: 'Matthew',
+    theme: { light: '#98f5e1', dark: '#083d33' },
+  },
 ] satisfies FeaturedChannel[]
 
 export const FEATURED_CHANNEL_SLUGS = FEATURED_CHANNELS.map((channel) => channel.slug)
