@@ -537,6 +537,68 @@ main {
   justify-content: space-between;
 }
 
+.inline-player-waveform {
+  align-items: center;
+  display: none;
+  flex: 0 0 auto;
+  gap: 2px;
+  height: 1.1rem;
+  overflow: hidden;
+  width: 4.5rem;
+}
+
+.inline-player-waveform span {
+  animation: waveform-drift 900ms linear infinite;
+  background: currentColor;
+  display: block;
+  flex: 0 0 2px;
+  height: 30%;
+  opacity: 0.72;
+  transform-origin: center;
+}
+
+.inline-player[data-minimized="true"] .inline-player-waveform {
+  display: flex;
+}
+
+.inline-player-waveform span:nth-child(3n + 1) {
+  height: 85%;
+}
+
+.inline-player-waveform span:nth-child(3n + 2) {
+  height: 45%;
+  opacity: 0.5;
+}
+
+.inline-player-waveform span:nth-child(4n) {
+  height: 65%;
+}
+
+.inline-player-waveform span:nth-child(5n) {
+  height: 25%;
+  opacity: 0.35;
+}
+
+@keyframes waveform-drift {
+  0% {
+    transform: translateX(-0.35rem) scaleY(0.75);
+  }
+
+  50% {
+    transform: translateX(0.2rem) scaleY(1.15);
+  }
+
+  100% {
+    transform: translateX(0.75rem) scaleY(0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inline-player-waveform span {
+    animation: none;
+  }
+}
+
 .inline-player-meta {
   display: grid;
   gap: 0.1rem;

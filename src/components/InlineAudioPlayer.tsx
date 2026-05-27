@@ -171,6 +171,11 @@ export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
   return (
     <aside className="inline-player" data-minimized={isMinimized} aria-label="Audio player">
       <div className="inline-player-bar">
+        <div className="inline-player-waveform" aria-hidden="true">
+          {Array.from({ length: 18 }, (_, index) => (
+            <span key={index} />
+          ))}
+        </div>
         <div className="inline-player-meta">
           <span>{isMinimized ? 'Playing' : 'Now playing'}</span>
           <strong>{player.title}</strong>
