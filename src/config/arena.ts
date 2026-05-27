@@ -3,7 +3,14 @@ import 'server-only'
 import { createArena } from '@aredotna/sdk'
 
 const ARENA_API_BASE_URL = 'https://api.are.na'
-const DEFAULT_CHANNEL_SLUG = 'arena-influences'
+const DEFAULT_CHANNEL_SLUG = 'aura-3jsxrom9yya'
+const DEFAULT_CHANNEL_SLUGS = [
+  'sonic-diversity-zewocbw6otq',
+  'cinema-9yfvn85suew',
+  'aura-3jsxrom9yya',
+]
+const DEFAULT_SITE_TITLE = "Kiru's Are.na Channels"
+const DEFAULT_SITE_DESCRIPTION = 'Sonic diversity, cinema, and aura from Kiru on Are.na.'
 const LOCAL_SITE_URL = 'http://127.0.0.1:5175'
 
 function requiredValue(value: string | undefined, fallback: string, name: string) {
@@ -18,6 +25,26 @@ function requiredValue(value: string | undefined, fallback: string, name: string
 
 export function getRootChannelSlug() {
   return requiredValue(process.env.ARENA_CHANNEL_SLUG, DEFAULT_CHANNEL_SLUG, 'ARENA_CHANNEL_SLUG')
+}
+
+export function getConfiguredChannelSlugs() {
+  const slugs = process.env.ARENA_CHANNEL_SLUGS?.split(',')
+    .map((slug: string) => slug.trim())
+    .filter(Boolean)
+
+  return slugs?.length ? slugs : DEFAULT_CHANNEL_SLUGS
+}
+
+export function getSiteTitle() {
+  return requiredValue(process.env.ARENA_SITE_TITLE, DEFAULT_SITE_TITLE, 'ARENA_SITE_TITLE')
+}
+
+export function getSiteDescription() {
+  return requiredValue(
+    process.env.ARENA_SITE_DESCRIPTION,
+    DEFAULT_SITE_DESCRIPTION,
+    'ARENA_SITE_DESCRIPTION',
+  )
 }
 
 export function getSiteUrl() {

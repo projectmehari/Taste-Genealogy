@@ -2,7 +2,13 @@ import 'server-only'
 
 import type { Block, Channel } from '@aredotna/sdk'
 import { cache } from 'react'
-import { arena, getRootChannelSlug } from '@/config/arena'
+import {
+  arena,
+  getConfiguredChannelSlugs,
+  getRootChannelSlug,
+  getSiteDescription,
+  getSiteTitle,
+} from '@/config/arena'
 
 export type Connectable = Block | Channel
 
@@ -71,6 +77,54 @@ function addBlock(
 }
 
 async function loadSiteData(): Promise<SiteData> {
+  const configuredChannelSlugs = getConfiguredChannelSlugs()
+
+  if (configuredChannelSlugs) {
+    const sections = await Promise.all(
+      configuredChannelSlugs.map(async (slug) => {
+        const channel = await arena.channels.get(slug)
+        const items = await getChannelContents(channel.slug)
+        const { blocks, channels } = splitContents(items)
+
+        return { blocks, channel, channels } satisfies ChannelSection
+      }),
+    )
+
+    const root = {
+      id: 0,
+      title: getSiteTitle(),
+      slug: 'index',
+      description: {
+        html: getSiteDescription(),
+        plain: getSiteDescription(),
+      },
+      length: sections.length,
+      status: 'public',
+      type: 'Channel',
+      updated_at: new Date().toISOString(),
+    } as unknown as Channel
+
+    const data: SiteData = {
+      allBlocks: [],
+      blockContexts: new Map(),
+      blocksById: new Map(),
+      root,
+      rootBlocks: [],
+      rootChannels: sections.map((section) => section.channel),
+      sectionsBySlug: new Map(),
+    }
+
+    for (const section of sections) {
+      for (const block of section.blocks) {
+        addBlock(block, section.channel, data)
+      }
+    }
+
+    data.sectionsBySlug = new Map(sections.map((section) => [section.channel.slug, section]))
+
+    return data
+  }
+
   const root = await arena.channels.get(getRootChannelSlug())
   const rootItems = await getChannelContents(root.slug)
   const { blocks: rootBlocks, channels: rootChannels } = splitContents(rootItems)

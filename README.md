@@ -32,12 +32,23 @@ The app runs at `http://127.0.0.1:5175`.
 ## Configuration
 
 ```sh
-ARENA_CHANNEL_SLUG=arena-influences
+ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,cinema-9yfvn85suew,aura-3jsxrom9yya
+ARENA_SITE_TITLE=Kiru's Are.na Channels
+ARENA_SITE_DESCRIPTION=Sonic diversity, cinema, and aura from Kiru on Are.na.
 ```
 
-`ARENA_CHANNEL_SLUG` must point to a public Are.na channel. Keep the root channel
-small enough to fetch at build time: the build reads all root blocks plus all
-blocks in one level of child channels.
+Use `ARENA_CHANNEL_SLUGS` when you want to list selected channels directly.
+Separate slugs with commas. These channels become the persistent navigation.
+
+Alternatively, use one root channel:
+
+```sh
+ARENA_CHANNEL_SLUG=aura-3jsxrom9yya
+```
+
+Every configured slug must point to a public Are.na channel. Keep configured
+channels small enough to fetch at build time: the build reads all blocks in the
+selected channels, plus one level of child channels for nested navigation.
 
 ## Routes
 
