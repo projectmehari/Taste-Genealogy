@@ -33,6 +33,17 @@ export default async function HomePage() {
         <h1>{data.root.title}</h1>
         <ApiHtml className="description prose" html={data.root.description?.html} />
       </header>
+      <section aria-labelledby="about-heading" className="about-section prose">
+        <h2 id="about-heading">About</h2>
+        <p>
+          Taste Genealogy is a small atlas of references: sounds, images, films, atmospheres,
+          textures, and fragments that point to where a creative instinct comes from.
+        </p>
+        <p>
+          The channels are less a portfolio than a family tree for taste — a way to trace the
+          influences, moods, and recurring signals that keep showing up in the work.
+        </p>
+      </section>
       <ThumbnailGrid
         blocks={data.rootBlocks}
         emptyMessage="No blocks are connected directly to this channel yet."

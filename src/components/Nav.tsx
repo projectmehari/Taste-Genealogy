@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AppearanceControls } from '@/components/AppearanceControls'
 import { NavLinks } from '@/components/NavLinks'
 import { getNav } from '@/lib/nav'
 
@@ -19,6 +20,7 @@ export async function Nav() {
           }))}
         />
       ) : null}
+      <AppearanceControls />
     </header>
   )
 }

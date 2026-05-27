@@ -9,8 +9,9 @@ const DEFAULT_CHANNEL_SLUGS = [
   'cinema-9yfvn85suew',
   'aura-3jsxrom9yya',
 ]
-const DEFAULT_SITE_TITLE = "Kiru's Are.na Channels"
-const DEFAULT_SITE_DESCRIPTION = 'Sonic diversity, cinema, and aura from Kiru on Are.na.'
+const DEFAULT_SITE_TITLE = 'Taste Genealogy'
+const DEFAULT_SITE_DESCRIPTION =
+  'A living map of taste: sonic diversity, cinema, and aura gathered through Kiru’s Are.na channels.'
 const LOCAL_SITE_URL = 'http://127.0.0.1:5175'
 
 function requiredValue(value: string | undefined, fallback: string, name: string) {

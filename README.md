@@ -33,8 +33,8 @@ The app runs at `http://127.0.0.1:5175`.
 
 ```sh
 ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,cinema-9yfvn85suew,aura-3jsxrom9yya
-ARENA_SITE_TITLE=Kiru's Are.na Channels
-ARENA_SITE_DESCRIPTION=Sonic diversity, cinema, and aura from Kiru on Are.na.
+ARENA_SITE_TITLE=Taste Genealogy
+ARENA_SITE_DESCRIPTION=A living map of taste: sonic diversity, cinema, and aura gathered through Kiru’s Are.na channels.
 ```
 
 Use `ARENA_CHANNEL_SLUGS` when you want to list selected channels directly.
