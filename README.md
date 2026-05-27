@@ -45,7 +45,7 @@ To add another channel to the site, add one object to `FEATURED_CHANNELS`:
 Reorder that array to reorder the navigation. Each slug must point to a public
 Are.na channel.
 
-You can still override the channel list at deploy time with env vars:
+You can also add deploy-time channel slugs with env vars:
 
 ```sh
 ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,dj-mixes-i-have-enjoyed,dj-mixes,i-luv-this-mix-9nia6qlkius,best-of-dj-mixes,music-dj-sets-mixes,night-life-is-so-fun
@@ -53,10 +53,10 @@ ARENA_SITE_TITLE=Taste Genealogy
 ARENA_SITE_DESCRIPTION=A living map of music references, DJ mixes, scenes, atmospheres, and sonic fingerprints.
 ```
 
-Use `ARENA_CHANNEL_SLUGS` when you want to list selected channels directly.
-Separate slugs with commas. These channels become the persistent navigation.
-Titles/themes for env-only slugs fall back to Are.na's channel title and the
-site default background unless you also add them to `src/config/channels.ts`.
+`ARENA_CHANNEL_SLUGS` is merged with `FEATURED_CHANNELS`, with duplicates removed.
+Use it for extra deploy-time slugs, but keep `src/config/channels.ts` as the main
+place for curated navigation order, display titles, and themes. Titles/themes for
+env-only slugs fall back to Are.na's channel title and the site default background.
 
 Alternatively, use one root channel:
 

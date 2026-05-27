@@ -25,11 +25,12 @@ export function getRootChannelSlug() {
 }
 
 export function getConfiguredChannelSlugs() {
-  const slugs = process.env.ARENA_CHANNEL_SLUGS?.split(',')
-    .map((slug: string) => slug.trim())
-    .filter(Boolean)
+  const envSlugs =
+    process.env.ARENA_CHANNEL_SLUGS?.split(',')
+      .map((slug: string) => slug.trim())
+      .filter(Boolean) ?? []
 
-  return slugs?.length ? slugs : FEATURED_CHANNEL_SLUGS
+  return Array.from(new Set([...envSlugs, ...FEATURED_CHANNEL_SLUGS]))
 }
 
 export function getChannelDisplayTitle(slug: string, fallback: string) {

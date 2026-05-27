@@ -44,6 +44,56 @@ export const FEATURED_CHANNELS = [
     title: 'Sophia Bae',
     theme: { light: '#ffb7d5', dark: '#3f1830' },
   },
+  {
+    slug: 'record-labels',
+    title: 'Record Labels',
+    theme: { light: '#f0e3c0', dark: '#352a18' },
+  },
+  {
+    slug: 'black-music',
+    title: 'Black Music',
+    theme: { light: '#d8c4ff', dark: '#241835' },
+  },
+  {
+    slug: 'dance-clubs',
+    title: 'Dance Clubs',
+    theme: { light: '#b8f2ff', dark: '#10333d' },
+  },
+  {
+    slug: 'music-video-channel',
+    title: 'Music Video Channel',
+    theme: { light: '#ffc4d6', dark: '#3b1625' },
+  },
+  {
+    slug: 'music-notation-channel',
+    title: 'Music Notation Channel',
+    theme: { light: '#d6f5c9', dark: '#1c3418' },
+  },
+  {
+    slug: 'a-conversation-about-music',
+    title: 'A Conversation About Music',
+    theme: { light: '#fff0b8', dark: '#3b3212' },
+  },
+  {
+    slug: 'music-videos-kypubu2hjcs',
+    title: 'Music Videos',
+    theme: { light: '#c8d8ff', dark: '#17213a' },
+  },
+  {
+    slug: 'music-tour-posters',
+    title: 'Music Tour Posters',
+    theme: { light: '#ffd0ad', dark: '#3a2114' },
+  },
+  {
+    slug: 'music-culture-2y2hoaryerm',
+    title: 'Music Culture',
+    theme: { light: '#c8f0e0', dark: '#143327' },
+  },
+  {
+    slug: 'music-pztiqpda_zi',
+    title: 'Music',
+    theme: { light: '#ead7ff', dark: '#2b1b3b' },
+  },
 ] satisfies FeaturedChannel[]
 
 export const FEATURED_CHANNEL_SLUGS = FEATURED_CHANNELS.map((channel) => channel.slug)
