@@ -12,7 +12,7 @@ site navigation. Blocks in those child channels render on their own static pages
 
 ## Stack
 
-- pnpm + Next.js 15 + React 19
+- npm + Next.js 15 + React 19
 - Static export (`next build`)
 - Server-fetched public Are.na data via `@aredotna/sdk`
 - SSR measured masonry via Pretext and `@napi-rs/canvas`
@@ -22,9 +22,9 @@ site navigation. Blocks in those child channels render on their own static pages
 ## Quick Start
 
 ```sh
-pnpm install
+npm install
 cp .env.example .env.local
-pnpm dev
+npm run dev
 ```
 
 The app runs at `http://127.0.0.1:5175`.
@@ -32,9 +32,9 @@ The app runs at `http://127.0.0.1:5175`.
 ## Configuration
 
 ```sh
-ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,cinema-9yfvn85suew,aura-3jsxrom9yya
+ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,dj-mixes-i-have-enjoyed,dj-mixes,i-luv-this-mix-9nia6qlkius,best-of-dj-mixes,music-dj-sets-mixes,night-life-is-so-fun
 ARENA_SITE_TITLE=Taste Genealogy
-ARENA_SITE_DESCRIPTION=A living map of taste: sonic diversity, cinema, and aura gathered through Kiru’s Are.na channels.
+ARENA_SITE_DESCRIPTION=A living map of music references, DJ mixes, scenes, atmospheres, and sonic fingerprints.
 ```
 
 Use `ARENA_CHANNEL_SLUGS` when you want to list selected channels directly.
@@ -43,7 +43,7 @@ Separate slugs with commas. These channels become the persistent navigation.
 Alternatively, use one root channel:
 
 ```sh
-ARENA_CHANNEL_SLUG=aura-3jsxrom9yya
+ARENA_CHANNEL_SLUG=sonic-diversity-zewocbw6otq
 ```
 
 Every configured slug must point to a public Are.na channel. Keep configured
@@ -52,17 +52,17 @@ selected channels, plus one level of child channels for nested navigation.
 
 ## Routes
 
-- `/` renders blocks connected directly to the root channel.
-- `/[channel]` renders blocks connected to a child channel.
-- `/show/[id]` renders a permalink for each fetched block.
+- `/` renders the latest updated blocks across the configured music channels.
+- `/[channel]` renders blocks connected to a configured channel.
+- Block cards link out to their canonical Are.na block pages.
 - `/rss.xml` renders an RSS 2.0 feed for every fetched block.
 
 ## Scripts
 
 ```sh
-pnpm dev
-pnpm build
-pnpm lint
-pnpm typecheck
-pnpm format
+npm run dev
+npm run build
+npm run lint
+npm run typecheck
+npm run format
 ```

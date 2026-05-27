@@ -13,12 +13,28 @@
   --page-background: #b8d8ff;
 }
 
-:root[data-channel="cinema-9yfvn85suew"] {
+:root[data-channel="dj-mixes-i-have-enjoyed"] {
+  --page-background: #f6d365;
+}
+
+:root[data-channel="dj-mixes"] {
+  --page-background: #c8f7dc;
+}
+
+:root[data-channel="i-luv-this-mix-9nia6qlkius"] {
   --page-background: #f7b2ad;
 }
 
-:root[data-channel="aura-3jsxrom9yya"] {
-  --page-background: #f4cd6d;
+:root[data-channel="best-of-dj-mixes"] {
+  --page-background: #d9c2ff;
+}
+
+:root[data-channel="music-dj-sets-mixes"] {
+  --page-background: #b7f0ef;
+}
+
+:root[data-channel="night-life-is-so-fun"] {
+  --page-background: #ffb7d5;
 }
 
 :root[data-theme="dark"] {
@@ -37,12 +53,28 @@
   --page-background: #17283c;
 }
 
-:root[data-theme="dark"][data-channel="cinema-9yfvn85suew"] {
+:root[data-theme="dark"][data-channel="dj-mixes-i-have-enjoyed"] {
+  --page-background: #3d3112;
+}
+
+:root[data-theme="dark"][data-channel="dj-mixes"] {
+  --page-background: #123021;
+}
+
+:root[data-theme="dark"][data-channel="i-luv-this-mix-9nia6qlkius"] {
   --page-background: #3b1c1a;
 }
 
-:root[data-theme="dark"][data-channel="aura-3jsxrom9yya"] {
-  --page-background: #3f3110;
+:root[data-theme="dark"][data-channel="best-of-dj-mixes"] {
+  --page-background: #2a1f3f;
+}
+
+:root[data-theme="dark"][data-channel="music-dj-sets-mixes"] {
+  --page-background: #123536;
+}
+
+:root[data-theme="dark"][data-channel="night-life-is-so-fun"] {
+  --page-background: #3f1830;
 }
 
 @font-face {
@@ -207,10 +239,15 @@ main {
   padding: 1.25rem;
 }
 
-.about-section h2 {
+.about-section h2,
+.latest-section h2 {
   font-size: 1rem;
   font-weight: 400;
   margin: 0 0 1rem;
+}
+
+.latest-section h2 {
+  margin-bottom: 2rem;
 }
 
 .page-header h1 {

@@ -68,7 +68,7 @@ export function buildRssXml({
       return bDate - aDate
     })
     .map((block) => {
-      const url = absoluteUrl(`/show/${block.id}/`)
+      const url = `https://www.are.na/block/${block.id}`
       const context = blockContexts.get(block.id)
       const blockEnclosure = enclosure(block)
       const enclosureXml = blockEnclosure

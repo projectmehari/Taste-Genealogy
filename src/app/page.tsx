@@ -36,18 +36,21 @@ export default async function HomePage() {
       <section aria-labelledby="about-heading" className="about-section prose">
         <h2 id="about-heading">About</h2>
         <p>
-          Taste Genealogy is a small atlas of references: sounds, images, films, atmospheres,
-          textures, and fragments that point to where a creative instinct comes from.
+          Taste Genealogy is a listening map: a rolling collection of DJ mixes, sonic references,
+          scenes, textures, and atmospheres pulled from Are.na.
         </p>
         <p>
-          The channels are less a portfolio than a family tree for taste — a way to trace the
-          influences, moods, and recurring signals that keep showing up in the work.
+          The homepage now surfaces the latest updated blocks across the music channels, while each
+          tab traces one person’s trail of mixes and nightlife references.
         </p>
       </section>
-      <ThumbnailGrid
-        blocks={data.rootBlocks}
-        emptyMessage="No blocks are connected directly to this channel yet."
-      />
+      <section aria-labelledby="latest-heading" className="latest-section">
+        <h2 id="latest-heading">Latest updates</h2>
+        <ThumbnailGrid
+          blocks={data.rootBlocks}
+          emptyMessage="No recent blocks are available yet."
+        />
+      </section>
     </>
   )
 }

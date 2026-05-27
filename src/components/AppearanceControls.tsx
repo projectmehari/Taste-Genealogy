@@ -5,8 +5,12 @@ import { usePathname } from 'next/navigation'
 
 const CHANNEL_SLUGS = [
   'sonic-diversity-zewocbw6otq',
-  'cinema-9yfvn85suew',
-  'aura-3jsxrom9yya',
+  'dj-mixes-i-have-enjoyed',
+  'dj-mixes',
+  'i-luv-this-mix-9nia6qlkius',
+  'best-of-dj-mixes',
+  'music-dj-sets-mixes',
+  'night-life-is-so-fun',
 ]
 
 function channelFromPathname(pathname: string | null) {

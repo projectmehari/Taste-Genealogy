@@ -3,15 +3,28 @@ import 'server-only'
 import { createArena } from '@aredotna/sdk'
 
 const ARENA_API_BASE_URL = 'https://api.are.na'
-const DEFAULT_CHANNEL_SLUG = 'aura-3jsxrom9yya'
+const DEFAULT_CHANNEL_SLUG = 'sonic-diversity-zewocbw6otq'
 const DEFAULT_CHANNEL_SLUGS = [
   'sonic-diversity-zewocbw6otq',
-  'cinema-9yfvn85suew',
-  'aura-3jsxrom9yya',
+  'dj-mixes-i-have-enjoyed',
+  'dj-mixes',
+  'i-luv-this-mix-9nia6qlkius',
+  'best-of-dj-mixes',
+  'music-dj-sets-mixes',
+  'night-life-is-so-fun',
 ]
+const DEFAULT_CHANNEL_TITLES: Record<string, string> = {
+  'sonic-diversity-zewocbw6otq': '{Kiru + }',
+  'dj-mixes-i-have-enjoyed': 'Lukas W',
+  'dj-mixes': 'Internet Bill',
+  'i-luv-this-mix-9nia6qlkius': 'chris osagie',
+  'best-of-dj-mixes': 'Sam db295e',
+  'music-dj-sets-mixes': 'I \\V N 🗺',
+  'night-life-is-so-fun': 'Sophia Bae',
+}
 const DEFAULT_SITE_TITLE = 'Taste Genealogy'
 const DEFAULT_SITE_DESCRIPTION =
-  'A living map of taste: sonic diversity, cinema, and aura gathered through Kiru’s Are.na channels.'
+  'A living map of music references, DJ mixes, scenes, atmospheres, and sonic fingerprints.'
 const LOCAL_SITE_URL = 'http://127.0.0.1:5175'
 
 function requiredValue(value: string | undefined, fallback: string, name: string) {
@@ -34,6 +47,10 @@ export function getConfiguredChannelSlugs() {
     .filter(Boolean)
 
   return slugs?.length ? slugs : DEFAULT_CHANNEL_SLUGS
+}
+
+export function getChannelDisplayTitle(slug: string, fallback: string) {
+  return DEFAULT_CHANNEL_TITLES[slug] ?? fallback
 }
 
 export function getSiteTitle() {

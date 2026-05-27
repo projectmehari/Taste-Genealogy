@@ -4,6 +4,7 @@ import type { Block, Channel } from '@aredotna/sdk'
 import { cache } from 'react'
 import {
   arena,
+  getChannelDisplayTitle,
   getConfiguredChannelSlugs,
   getRootChannelSlug,
   getSiteDescription,
@@ -28,6 +29,8 @@ export type SiteData = {
   sectionsBySlug: Map<string, ChannelSection>
 }
 
+const LATEST_HOME_BLOCK_LIMIT = 120
+
 function isBlock(item: Connectable): item is Block {
   return 'base_type' in item && item.base_type === 'Block'
 }
@@ -45,14 +48,71 @@ function sortByConnectionPosition<T extends Connectable>(items: T[]) {
   })
 }
 
-async function getChannelContents(slug: string) {
-  const contents: Connectable[] = []
+function sortBlocksByLatestUpdate(blocks: Block[]) {
+  return [...blocks].sort((a, b) => {
+    const aDate = Date.parse(a.connection?.connected_at ?? a.created_at)
+    const bDate = Date.parse(b.connection?.connected_at ?? b.created_at)
 
-  for await (const page of arena.channels.paginateContents(slug, { per: 100 })) {
-    contents.push(...page.data)
+    return bDate - aDate
+  })
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function retryDelayMs(error: unknown, attempt: number) {
+  const response = (error as { response?: { headers?: { get?: (name: string) => string | null } } })
+    .response
+  const retryAfter = Number(response?.headers?.get?.('retry-after'))
+
+  if (Number.isFinite(retryAfter) && retryAfter > 0) {
+    return retryAfter * 1000
   }
 
-  return sortByConnectionPosition(contents)
+  return Math.min(90_000, 2000 * 2 ** attempt)
+}
+
+async function withArenaRetry<T>(label: string, load: () => Promise<T>) {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      return await load()
+    } catch (error) {
+      lastError = error
+      const status = (error as { status?: number }).status
+
+      if (status !== 429 || attempt === 3) {
+        throw error
+      }
+
+      const delay = retryDelayMs(error, attempt)
+      console.warn(`${label} hit Are.na rate limit; retrying in ${Math.round(delay / 1000)}s`)
+      await sleep(delay)
+    }
+  }
+
+  throw lastError
+}
+
+function withDisplayTitle(channel: Channel) {
+  return {
+    ...channel,
+    title: getChannelDisplayTitle(channel.slug, channel.title),
+  }
+}
+
+async function getChannelContents(slug: string) {
+  return withArenaRetry(`channel contents ${slug}`, async () => {
+    const contents: Connectable[] = []
+
+    for await (const page of arena.channels.paginateContents(slug, { per: 100 })) {
+      contents.push(...page.data)
+    }
+
+    return sortByConnectionPosition(contents)
+  })
 }
 
 function splitContents(items: Connectable[]) {
@@ -80,15 +140,17 @@ async function loadSiteData(): Promise<SiteData> {
   const configuredChannelSlugs = getConfiguredChannelSlugs()
 
   if (configuredChannelSlugs) {
-    const sections = await Promise.all(
-      configuredChannelSlugs.map(async (slug) => {
-        const channel = await arena.channels.get(slug)
-        const items = await getChannelContents(channel.slug)
-        const { blocks, channels } = splitContents(items)
+    const sections: ChannelSection[] = []
 
-        return { blocks, channel, channels } satisfies ChannelSection
-      }),
-    )
+    for (const slug of configuredChannelSlugs) {
+      const channel = withDisplayTitle(
+        await withArenaRetry(`channel ${slug}`, () => arena.channels.get(slug)),
+      )
+      const items = await getChannelContents(channel.slug)
+      const { blocks, channels } = splitContents(items)
+
+      sections.push({ blocks, channel, channels })
+    }
 
     const root = {
       id: 0,
@@ -120,12 +182,13 @@ async function loadSiteData(): Promise<SiteData> {
       }
     }
 
+    data.rootBlocks = sortBlocksByLatestUpdate(data.allBlocks).slice(0, LATEST_HOME_BLOCK_LIMIT)
     data.sectionsBySlug = new Map(sections.map((section) => [section.channel.slug, section]))
 
     return data
   }
 
-  const root = await arena.channels.get(getRootChannelSlug())
+  const root = withDisplayTitle(await withArenaRetry('root channel', () => arena.channels.get(getRootChannelSlug())))
   const rootItems = await getChannelContents(root.slug)
   const { blocks: rootBlocks, channels: rootChannels } = splitContents(rootItems)
 

@@ -12,7 +12,7 @@ function thumbnailItem(block: Block): MasonryGridItem {
 
   return {
     description: blockDescription(block),
-    href: `/show/${block.id}/`,
+    href: `https://www.are.na/block/${block.id}`,
     id: block.id,
     image: blockImageData(block),
     title,
