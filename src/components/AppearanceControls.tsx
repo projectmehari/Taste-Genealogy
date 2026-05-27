@@ -19,6 +19,7 @@ function channelFromPathname(pathname: string | null) {
 export function AppearanceControls() {
   const pathname = usePathname()
   const [isDark, setIsDark] = useState(false)
+  const [isAboutOpen, setIsAboutOpen] = useState(false)
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem('taste-genealogy-theme')
@@ -50,13 +51,60 @@ export function AppearanceControls() {
   }, [isDark, pathname])
 
   return (
-    <button
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="theme-toggle"
-      onClick={() => setIsDark((current) => !current)}
-      type="button"
-    >
-      {isDark ? 'Light' : 'Dark'}
-    </button>
+    <div className="header-controls">
+      <button
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        className="theme-toggle"
+        onClick={() => setIsDark((current) => !current)}
+        type="button"
+      >
+        {isDark ? 'Light' : 'Dark'}
+      </button>
+      <button
+        aria-controls="about-panel"
+        aria-expanded={isAboutOpen}
+        className="about-toggle"
+        onClick={() => setIsAboutOpen((current) => !current)}
+        type="button"
+      >
+        About
+      </button>
+      {isAboutOpen ? (
+        <section aria-labelledby="about-heading" className="about-panel prose" id="about-panel">
+          <div className="about-panel-header">
+            <h2 id="about-heading">About Taste Genealogy</h2>
+            <button
+              aria-label="Close about panel"
+              className="about-close"
+              onClick={() => setIsAboutOpen(false)}
+              type="button"
+            >
+              Close
+            </button>
+          </div>
+          <p>
+            Taste Genealogy is a living map of music taste: a rolling curation of records,
+            videos, posters, scenes, textures, DJ mixes, and other sonic references collected by
+            Are.na users.
+          </p>
+          <p>
+            Instead of treating taste like a fixed profile, it follows trails between people and
+            channels — who saves what, which worlds cluster together, and how music culture moves
+            through fragments.
+          </p>
+          <p>
+            Built with the{' '}
+            <a href="https://github.com/aredotna/api-examples" rel="noreferrer" target="_blank">
+              Are.na API
+            </a>
+            . Shout out to{' '}
+            <a href="https://github.com/dzucconi" rel="noreferrer" target="_blank">
+              Damon Zucconi
+            </a>{' '}
+            for creating Are.na.
+          </p>
+        </section>
+      ) : null}
+    </div>
   )
 }

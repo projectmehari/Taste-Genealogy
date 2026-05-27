@@ -196,7 +196,17 @@ main {
   min-width: 0;
 }
 
-.theme-toggle {
+.header-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+  position: relative;
+}
+
+.theme-toggle,
+.about-toggle,
+.about-close {
   appearance: none;
   background: transparent;
   border: 1px solid currentColor;
@@ -204,13 +214,48 @@ main {
   color: inherit;
   cursor: pointer;
   font: inherit;
-  margin-left: auto;
   padding: 0.15rem 0.7rem 0.2rem;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover,
+.about-toggle:hover,
+.about-toggle[aria-expanded="true"],
+.about-close:hover {
   background: var(--foreground);
   color: var(--background);
+}
+
+.about-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 1px var(--background);
+  color: var(--foreground);
+  padding: 1.25rem;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.75rem);
+  width: min(30rem, calc(100vw - 2rem));
+  z-index: 30;
+}
+
+.about-panel-header {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.about-panel h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.about-panel a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
 .brand {
@@ -258,7 +303,6 @@ main {
   padding: 1.25rem;
 }
 
-.about-section h2,
 .latest-section h2 {
   font-size: 1rem;
   font-weight: 400;
@@ -591,10 +635,19 @@ main {
     text-decoration: none;
   }
 
-  .theme-toggle {
+  .header-controls {
     justify-self: start;
     margin-left: 0;
+  }
+
+  .header-controls button {
     min-height: 2.25rem;
+  }
+
+  .about-panel {
+    left: 0;
+    right: auto;
+    width: min(28rem, calc(100vw - 2rem));
   }
 
   .page-header {
