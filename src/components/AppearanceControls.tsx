@@ -101,7 +101,7 @@ export function AppearanceControls() {
             <a href="https://github.com/dzucconi" rel="noreferrer" target="_blank">
               Damon Zucconi
             </a>{' '}
-            for creating Are.na.
+            for setting up the repo.
           </p>
         </section>
       ) : null}
