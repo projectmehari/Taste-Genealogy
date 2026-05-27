@@ -280,6 +280,24 @@ main {
   max-width: 36rem;
 }
 
+.arena-user-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.channel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  gap: 0.25rem 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.channel-meta span {
+  white-space: nowrap;
+}
+
 .block {
   background: var(--surface);
   display: grid;
@@ -468,6 +486,12 @@ main {
   font-size: 0.75rem;
 }
 
+.inline-player-provenance {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .inline-player-meta strong,
 .inline-player-meta a {
   overflow: hidden;
@@ -500,6 +524,18 @@ main {
   border: 0;
   display: block;
   width: 100%;
+}
+
+.inline-player-body {
+  max-height: 180px;
+  overflow: hidden;
+  transition: max-height 180ms ease, opacity 180ms ease;
+}
+
+.inline-player-body[data-minimized="true"] {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .inline-player iframe {

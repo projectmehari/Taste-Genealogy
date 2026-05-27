@@ -47,6 +47,7 @@ export default async function HomePage() {
       <section aria-labelledby="latest-heading" className="latest-section">
         <h2 id="latest-heading">Latest updates</h2>
         <ThumbnailGrid
+          blockContexts={data.blockContexts}
           blocks={data.rootBlocks}
           emptyMessage="No recent blocks are available yet."
         />

@@ -94,7 +94,13 @@ function Thumbnail({
   positionedItem: PositionedMasonryItem
 }) {
   const { fallbackHeight, item, mediaHeight, metaHeight, width, x, y } = positionedItem
-  const playableLink = getPlayableLink(item.url, item.title, item.embedSrc)
+  const playableLink = getPlayableLink(item.url, item.title, item.embedSrc, {
+    channelSlug: item.channelSlug,
+    channelTitle: item.channelTitle,
+    connectedAt: item.connectedAt,
+    contributorName: item.contributorName,
+    contributorSlug: item.contributorSlug,
+  })
   const thumbnailStyle = {
     height: positionedItem.height,
     transform: `translate3d(${x}px, ${y}px, 0)`,

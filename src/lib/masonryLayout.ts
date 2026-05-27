@@ -1,6 +1,11 @@
 import { layout, type PreparedText, prepare } from '@chenglou/pretext'
 
 export type MasonryGridItem = {
+  channelSlug?: string
+  channelTitle?: string
+  connectedAt?: string
+  contributorName?: string
+  contributorSlug?: string
   description?: string
   embedSrc?: string | null
   href: string
@@ -108,6 +113,11 @@ export function computeMasonryLayout(items: PreparedItem[], containerWidth: numb
       fallbackHeight,
       height: itemHeight,
       item: {
+        channelSlug: item.channelSlug,
+        channelTitle: item.channelTitle,
+        connectedAt: item.connectedAt,
+        contributorName: item.contributorName,
+        contributorSlug: item.contributorSlug,
         description: fallbackText,
         embedSrc: item.embedSrc,
         href: item.href,

@@ -1,6 +1,6 @@
 import 'server-only'
 
-import type { Block, Channel } from '@aredotna/sdk'
+import type { Block, Channel, User } from '@aredotna/sdk'
 import { cache } from 'react'
 import {
   arena,
@@ -17,6 +17,7 @@ export type ChannelSection = {
   blocks: Block[]
   channel: Channel
   channels: Channel[]
+  ownerProfile?: User | null
 }
 
 export type SiteData = {
@@ -103,6 +104,14 @@ function withDisplayTitle(channel: Channel) {
   }
 }
 
+async function getChannelOwnerProfile(channel: Channel) {
+  if (channel.owner?.type !== 'User') {
+    return null
+  }
+
+  return withArenaRetry(`user ${channel.owner.slug}`, () => arena.users.get(channel.owner.slug))
+}
+
 async function getChannelContents(slug: string) {
   return withArenaRetry(`channel contents ${slug}`, async () => {
     const contents: Connectable[] = []
@@ -149,7 +158,7 @@ async function loadSiteData(): Promise<SiteData> {
       const items = await getChannelContents(channel.slug)
       const { blocks, channels } = splitContents(items)
 
-      sections.push({ blocks, channel, channels })
+      sections.push({ blocks, channel, channels, ownerProfile: await getChannelOwnerProfile(channel) })
     }
 
     const root = {
@@ -210,7 +219,12 @@ async function loadSiteData(): Promise<SiteData> {
     rootChannels.map(async (channel) => {
       const items = await getChannelContents(channel.slug)
       const { blocks, channels } = splitContents(items)
-      const section: ChannelSection = { blocks, channel, channels }
+      const section: ChannelSection = {
+        blocks,
+        channel,
+        channels,
+        ownerProfile: await getChannelOwnerProfile(channel),
+      }
 
       for (const block of blocks) {
         addBlock(block, channel, data)
