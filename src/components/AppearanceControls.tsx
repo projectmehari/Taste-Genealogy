@@ -23,9 +23,8 @@ export function AppearanceControls() {
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem('taste-genealogy-theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
-    setIsDark(savedTheme ? savedTheme === 'dark' : prefersDark)
+    setIsDark(savedTheme === 'dark')
   }, [])
 
   useEffect(() => {
