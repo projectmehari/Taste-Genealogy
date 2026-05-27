@@ -203,7 +203,7 @@ export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
       </div>
       <div className="inline-player-body" data-minimized={isMinimized} aria-hidden={isMinimized}>
         {player.kind === 'audio' ? (
-          <audio autoPlay controls src={player.url} />
+          <audio autoPlay controls playsInline src={player.url} />
         ) : (
           <iframe
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"

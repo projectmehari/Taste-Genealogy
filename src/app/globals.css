@@ -690,6 +690,7 @@ main {
     left: 0;
     max-width: none;
     padding: 0.65rem;
+    padding-bottom: calc(0.65rem + env(safe-area-inset-bottom));
     transform: none;
     width: 100%;
   }
@@ -704,7 +705,11 @@ main {
     grid-template-columns: 1fr 1fr;
   }
 
+  .inline-player button {
+    min-height: 2.75rem;
+  }
+
   .inline-player iframe {
-    height: 120px;
+    height: 160px;
   }
 }
