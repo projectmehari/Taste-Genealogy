@@ -537,65 +537,68 @@ main {
   justify-content: space-between;
 }
 
-.inline-player-waveform {
-  align-items: center;
+.inline-player-equalizer {
+  align-items: end;
   display: none;
   flex: 0 0 auto;
-  gap: 2px;
-  height: 1.1rem;
-  overflow: hidden;
-  width: 4.5rem;
+  gap: 3px;
+  height: 1.05rem;
+  width: 1.25rem;
 }
 
-.inline-player-waveform span {
-  animation: waveform-drift 900ms linear infinite;
+.inline-player-equalizer span {
+  animation: equalizer-bounce 760ms ease-in-out infinite;
   background: currentColor;
   display: block;
-  flex: 0 0 2px;
-  height: 30%;
-  opacity: 0.72;
-  transform-origin: center;
+  flex: 0 0 3px;
+  height: 35%;
+  opacity: 0.75;
+  transform-origin: bottom;
 }
 
-.inline-player[data-minimized="true"] .inline-player-waveform {
+.inline-player[data-minimized="true"] .inline-player-equalizer {
   display: flex;
 }
 
-.inline-player-waveform span:nth-child(3n + 1) {
-  height: 85%;
+.inline-player-equalizer span:nth-child(2) {
+  animation-delay: 120ms;
 }
 
-.inline-player-waveform span:nth-child(3n + 2) {
-  height: 45%;
-  opacity: 0.5;
+.inline-player-equalizer span:nth-child(3) {
+  animation-delay: 240ms;
 }
 
-.inline-player-waveform span:nth-child(4n) {
-  height: 65%;
+.inline-player-equalizer span:nth-child(4) {
+  animation-delay: 360ms;
 }
 
-.inline-player-waveform span:nth-child(5n) {
-  height: 25%;
-  opacity: 0.35;
-}
-
-@keyframes waveform-drift {
-  0% {
-    transform: translateX(-0.35rem) scaleY(0.75);
-  }
-
-  50% {
-    transform: translateX(0.2rem) scaleY(1.15);
-  }
-
+@keyframes equalizer-bounce {
+  0%,
   100% {
-    transform: translateX(0.75rem) scaleY(0.75);
+    transform: scaleY(0.35);
+  }
+
+  45% {
+    transform: scaleY(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .inline-player-waveform span {
+  .inline-player-equalizer span {
     animation: none;
+  }
+
+  .inline-player-equalizer span:nth-child(1),
+  .inline-player-equalizer span:nth-child(4) {
+    height: 45%;
+  }
+
+  .inline-player-equalizer span:nth-child(2) {
+    height: 80%;
+  }
+
+  .inline-player-equalizer span:nth-child(3) {
+    height: 60%;
   }
 }
 
