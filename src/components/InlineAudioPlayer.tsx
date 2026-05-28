@@ -52,6 +52,33 @@ function spotifyEmbed(url: URL) {
   return path ? `https://open.spotify.com/embed/${path}` : null
 }
 
+function bandcampEmbedFromEmbedly(embedSrc?: string | null) {
+  if (!embedSrc) {
+    return null
+  }
+
+  try {
+    const parsed = new URL(embedSrc)
+    const src = parsed.hostname.endsWith('embedly.com') ? parsed.searchParams.get('src') : embedSrc
+
+    if (!src) {
+      return null
+    }
+
+    const bandcamp = new URL(src)
+
+    if (!bandcamp.hostname.endsWith('bandcamp.com') || !bandcamp.pathname.includes('/EmbeddedPlayer/')) {
+      return null
+    }
+
+    const normalized = `${bandcamp.origin}${bandcamp.pathname}${bandcamp.search}`
+
+    return normalized.endsWith('/') ? normalized : `${normalized}/`
+  } catch {
+    return null
+  }
+}
+
 function sourceLabel(url: string) {
   try {
     return new URL(url).hostname.replace(/^www\./, '')
@@ -86,6 +113,18 @@ export function getPlayableLink(
   embedSrc?: string | null,
   provenance: PlayableProvenance = {},
 ) {
+  const bandcamp = bandcampEmbedFromEmbedly(embedSrc)
+
+  if (bandcamp) {
+    return {
+      embedSrc: bandcamp,
+      kind: 'iframe',
+      title,
+      url: url || bandcamp,
+      ...provenance,
+    } satisfies PlayableLink
+  }
+
   if (url) {
     try {
       const parsed = new URL(url)

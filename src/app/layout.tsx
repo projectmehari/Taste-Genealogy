@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { AudioPlayerProvider } from '@/components/AudioPlayerProvider'
 import { Nav } from '@/components/Nav'
 import { RouteProgress } from '@/components/RouteProgress'
+import { ScrollToTop } from '@/components/ScrollToTop'
 import { getSiteUrl } from '@/config/arena'
 import { getRootChannel } from '@/lib/nav'
 import { channelDescription } from '@/lib/og'
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <RouteProgress />
           <Nav />
           <main>{children}</main>
+          <ScrollToTop />
         </AudioPlayerProvider>
       </body>
     </html>

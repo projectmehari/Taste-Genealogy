@@ -47,13 +47,15 @@ function blockSourceUrl(block: Block) {
 }
 
 function blockEmbedSrc(block: Block) {
-  if (block.type !== 'Embed' || !block.embed.html) {
+  const html = (block as { embed?: { html?: string | null } }).embed?.html
+
+  if (!html) {
     return null
   }
 
-  const src = block.embed.html.match(/<iframe[^>]+src=["']([^"']+)["']/i)?.[1]
+  const src = html.match(/<iframe[^>]+src=["']([^"']+)["']/i)?.[1]
 
-  return src ?? null
+  return src?.replaceAll('&amp;', '&') ?? null
 }
 
 export function ThumbnailGrid({ blockContexts, blocks, channel, emptyMessage }: ThumbnailGridProps) {
