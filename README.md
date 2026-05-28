@@ -1,25 +1,29 @@
-# Are.na Portfolio
+# Taste Genealogy
 
-A minimal statically generated portfolio site backed by a public Are.na channel.
+Taste Genealogy is a static music-discovery site built from public Are.na channels. It treats saved records, DJ mixes, videos, posters, labels, scenes, and other music references as a loose map of taste: who collects what, which worlds cluster together, and how music culture moves between people.
 
-Live example: [`arena-api-examples-portfolio.vercel.app`](https://arena-api-examples-portfolio.vercel.app/)
+The site is intentionally lightweight: public Are.na data is fetched at build time, rendered into static pages, and enhanced with small client-side interactions for theme switching, audio embeds, route progress, and scroll-to-top navigation.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Faredotna%2Fapi-examples%2Ftree%2Fmain%2Fportfolio&project-name=arena-portfolio&repository-name=arena-portfolio&env=ARENA_CHANNEL_SLUG&envDefaults=%7B%22ARENA_CHANNEL_SLUG%22%3A%22arena-influences%22%7D&envDescription=Choose+the+public+Are.na+channel+to+render.&envLink=https%3A%2F%2Fgithub.com%2Faredotna%2Fapi-examples%2Ftree%2Fmain%2Fportfolio%23configuration&demo-title=Are.na+Portfolio&demo-description=A+static+portfolio+generated+from+one+public+Are.na+channel.&demo-url=https%3A%2F%2Farena-api-examples-portfolio.vercel.app%2F)
+## Features
 
-The app uses one top-level channel as its source. Blocks connected directly to that
-channel render on the home page, and channels connected to it become the persistent
-site navigation. Blocks in those child channels render on their own static pages.
+- Curated top-level navigation sourced from public Are.na channels
+- Latest-items homepage spanning the configured channel set
+- Static channel pages at `/[channel]`
+- Masonry-style card layout with server-side text measurement
+- Inline audio/embed player for Bandcamp, SoundCloud, Mixcloud, Spotify, YouTube, and direct audio files
+- Light/dark mode with hand-picked channel color themes
+- RSS feed and Open Graph metadata
+- Static export via Next.js
 
 ## Stack
 
-- npm + Next.js 15 + React 19
-- Static export (`next build`)
-- Server-fetched public Are.na data via `@aredotna/sdk`
-- SSR measured masonry via Pretext and `@napi-rs/canvas`
-- No auth and no client-side API fetching
-- RSS feed and Open Graph metadata
+- Next.js 15 + React 19
+- TypeScript
+- `@aredotna/sdk` for public Are.na data
+- `@chenglou/pretext` + `@napi-rs/canvas` for layout measurement
+- Vercel-ready static build
 
-## Quick Start
+## Getting started
 
 ```sh
 npm install
@@ -27,12 +31,21 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The app runs at `http://127.0.0.1:5175`.
+The dev server runs at:
+
+```txt
+http://127.0.0.1:5175
+```
 
 ## Configuration
 
-The default Taste Genealogy channel list lives in `src/config/channels.ts`.
-To add another channel to the site, add one object to `FEATURED_CHANNELS`:
+The curated Taste Genealogy channel list lives in:
+
+```txt
+src/config/channels.ts
+```
+
+Each channel defines:
 
 ```ts
 {
@@ -42,45 +55,49 @@ To add another channel to the site, add one object to `FEATURED_CHANNELS`:
 }
 ```
 
-Reorder that array to reorder the navigation. Each slug must point to a public
-Are.na channel.
+- `slug` must be a public Are.na channel slug.
+- `title` is the display name used in navigation.
+- `theme.light` and `theme.dark` are hand-picked colors used by the nav links and active channel background.
+- Reorder `FEATURED_CHANNELS` to reorder the site navigation.
 
-You can also add deploy-time channel slugs with env vars:
+You can also add deploy-time channel slugs with environment variables:
 
 ```sh
-ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,dj-mixes-i-have-enjoyed,dj-mixes,i-luv-this-mix-9nia6qlkius,best-of-dj-mixes,music-dj-sets-mixes,night-life-is-so-fun
+ARENA_CHANNEL_SLUGS=sonic-diversity-zewocbw6otq,dj-mixes-i-have-enjoyed,dj-mixes
 ARENA_SITE_TITLE=Taste Genealogy
 ARENA_SITE_DESCRIPTION=A living map of music references, DJ mixes, scenes, atmospheres, and sonic fingerprints.
 ```
 
-`ARENA_CHANNEL_SLUGS` is merged with `FEATURED_CHANNELS`, with duplicates removed.
-Use it for extra deploy-time slugs, but keep `src/config/channels.ts` as the main
-place for curated navigation order, display titles, and themes. Titles/themes for
-env-only slugs fall back to Are.na's channel title and the site default background.
+`ARENA_CHANNEL_SLUGS` is merged with `FEATURED_CHANNELS`, with duplicates removed. Keep `src/config/channels.ts` as the main place for curated order, display titles, and themes; env-only channels fall back to their Are.na titles and the default site background.
 
-Alternatively, use one root channel:
+You can also render a single root channel instead:
 
 ```sh
 ARENA_CHANNEL_SLUG=sonic-diversity-zewocbw6otq
 ```
 
-Every configured slug must point to a public Are.na channel. Keep configured
-channels small enough to fetch at build time: the build reads all blocks in the
-selected channels, plus one level of child channels for nested navigation.
-
 ## Routes
 
 - `/` renders the latest updated blocks across the configured music channels.
 - `/[channel]` renders blocks connected to a configured channel.
-- Block cards link out to their canonical Are.na block pages.
-- `/rss.xml` renders an RSS 2.0 feed for every fetched block.
+- `/rss.xml` renders an RSS 2.0 feed for fetched blocks.
+- Block cards link back to canonical Are.na block pages.
 
 ## Scripts
 
 ```sh
-npm run dev
-npm run build
-npm run lint
-npm run typecheck
-npm run format
+npm run dev       # Start local development server
+npm run build     # Build static site
+npm run typecheck # Run TypeScript checks
 ```
+
+## Notes for public deployment
+
+- The app only reads public Are.na data; no auth token is required.
+- Keep `.env.local` private. Use `.env.example` as the shareable template.
+- Large build artifacts (`.next`, `out`) are ignored by git.
+- Bandcamp and some other embeds may require the user to press play inside the embedded player because browser autoplay rules block cross-origin audio.
+
+## Credits
+
+Built with the public Are.na API and based on ideas from the Are.na API examples. The current Taste Genealogy curation, interface, and audio-player behavior are customized for this project.
