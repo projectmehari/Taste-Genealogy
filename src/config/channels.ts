@@ -144,6 +144,11 @@ export const FEATURED_CHANNELS = [
     title: 'Matthew',
     theme: { light: '#98f5e1', dark: '#083d33' },
   },
+   {
+    slug: 'cool-music-websites',
+    title: 'christina',
+    theme: { light: '#98e5e1', dark: '#083b33' },
+  },
 ] satisfies FeaturedChannel[]
 
 export const FEATURED_CHANNEL_SLUGS = FEATURED_CHANNELS.map((channel) => channel.slug)
