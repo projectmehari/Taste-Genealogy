@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { AudioPlayerProvider } from '@/components/AudioPlayerProvider'
 import { Nav } from '@/components/Nav'
+import { PlayPresenceProvider } from '@/components/PlayPresenceProvider'
 import { RouteProgress } from '@/components/RouteProgress'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { getSiteUrl } from '@/config/arena'
@@ -45,10 +46,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body>
         <AudioPlayerProvider>
-          <RouteProgress />
-          <Nav />
-          <main>{children}</main>
-          <ScrollToTop />
+          <PlayPresenceProvider>
+            <RouteProgress />
+            <Nav />
+            <main>{children}</main>
+            <ScrollToTop />
+          </PlayPresenceProvider>
         </AudioPlayerProvider>
       </body>
     </html>
