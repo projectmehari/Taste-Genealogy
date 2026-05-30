@@ -213,6 +213,7 @@ export function getPlayableLink(
 
 export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
   const [isMinimized, setIsMinimized] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   const label = useMemo(() => (player ? sourceLabel(player.url) : null), [player])
   const connectedAt = useMemo(
     () => (player ? formatConnectedDate(player.connectedAt) : null),
@@ -221,11 +222,31 @@ export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
 
   useEffect(() => {
     setIsMinimized(false)
+    setIsPlaying(true)
   }, [player?.url])
+
+  useEffect(() => {
+    if (!player || player.kind !== 'iframe') {
+      return
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      const data = typeof event.data === 'string' ? event.data : ''
+      if (typeof event.origin !== 'string' && !event.origin) return
+      if (!data.includes('ready') && !data.includes('pause') && !data.includes('play')) return
+      setIsPlaying(data.includes('play') || (!data.includes('pause')))
+    }
+
+    window.addEventListener('message', handleMessage)
+
+    return () => window.removeEventListener('message', handleMessage)
+  }, [player])
 
   if (!player) {
     return null
   }
+
+  const currentSrc = (player.kind === 'iframe' && isPlaying) ? player.embedSrc : ''
 
   return (
     <aside className="inline-player" data-minimized={isMinimized} aria-label="Audio player">
@@ -261,6 +282,11 @@ export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
           <button type="button" onClick={() => setIsMinimized((current) => !current)}>
             {isMinimized ? 'Expand' : 'Minimize'}
           </button>
+          {player.kind === 'iframe' ? (
+            <button type="button" onClick={() => setIsPlaying((current) => !current)}>
+              {isPlaying ? 'Pause' : 'Play'}
+            </button>
+          ) : null}
           <button type="button" onClick={onClose}>
             Close
           </button>
@@ -273,7 +299,7 @@ export function InlineAudioPlayer({ onClose, player }: InlineAudioPlayerProps) {
           <iframe
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             loading="eager"
-            src={player.embedSrc}
+            src={currentSrc}
             title={player.title}
           />
         )}
