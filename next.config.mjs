@@ -4,6 +4,7 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
+  outputFileTracingRoot: new URL('.', import.meta.url).pathname,
   serverExternalPackages: ['@napi-rs/canvas'],
   trailingSlash: true,
 }
