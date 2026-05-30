@@ -52,6 +52,14 @@ function spotifyEmbed(url: URL) {
   return path ? `https://open.spotify.com/embed/${path}` : null
 }
 
+function bandcampEmbed(url: URL) {
+  if (!url.hostname.replace(/^www\./, '').endsWith('bandcamp.com')) {
+    return null
+  }
+
+  return `https://bandcamp.com/EmbeddedPlayer/track=${encodeURIComponent(url.href)}/size=large/`
+}
+
 function bandcampEmbedFromEmbedly(embedSrc?: string | null) {
   if (!embedSrc) {
     return null
@@ -67,7 +75,7 @@ function bandcampEmbedFromEmbedly(embedSrc?: string | null) {
 
     const bandcamp = new URL(src)
 
-    if (!bandcamp.hostname.endsWith('bandcamp.com') || !bandcamp.pathname.includes('/EmbeddedPlayer/')) {
+    if (!bandcamp.hostname.endsWith('bandcamp.com')) {
       return null
     }
 
@@ -172,6 +180,18 @@ export function getPlayableLink(
             ...provenance,
           } satisfies PlayableLink
         }
+      }
+
+      const bandcamp = bandcampEmbed(parsed)
+
+      if (bandcamp) {
+        return {
+          embedSrc: bandcamp,
+          kind: 'iframe',
+          title,
+          url,
+          ...provenance,
+        } satisfies PlayableLink
       }
     } catch {
       return null
