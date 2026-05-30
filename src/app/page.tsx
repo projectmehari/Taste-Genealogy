@@ -12,6 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const image = data.allBlocks.map(blockImage).find(Boolean)
 
   return {
+    alternates: {
+      canonical: '/',
+    },
     description,
     openGraph: {
       description,
@@ -21,6 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
       url: '/',
     },
     title: data.root.title,
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      description,
+      images: image ? [image] : undefined,
+      title: data.root.title,
+    },
   }
 }
 

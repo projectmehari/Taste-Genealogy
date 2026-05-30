@@ -50,9 +50,10 @@ export function getSiteDescription() {
 }
 
 export function getSiteUrl() {
-  return process.env.VERCEL_PROJECT_PRODUCTION_URL
+  return process.env.ARENA_SITE_URL?.trim()
+    || (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : LOCAL_SITE_URL
+    : LOCAL_SITE_URL)
 }
 
 export const arena = createArena({

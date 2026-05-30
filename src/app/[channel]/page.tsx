@@ -49,6 +49,9 @@ export async function generateMetadata({ params }: ChannelPageProps): Promise<Me
   const image = section.blocks.map(blockImage).find(Boolean)
 
   return {
+    alternates: {
+      canonical: `/${section.channel.slug}/`,
+    },
     description,
     openGraph: {
       description,
@@ -58,6 +61,12 @@ export async function generateMetadata({ params }: ChannelPageProps): Promise<Me
       url: `/${section.channel.slug}/`,
     },
     title: section.channel.title,
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      description,
+      images: image ? [image] : undefined,
+      title: section.channel.title,
+    },
   }
 }
 

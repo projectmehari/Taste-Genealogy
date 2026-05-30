@@ -1,8 +1,8 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { useMemo } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect, useMemo } from 'react'
+import { usePathname } from 'next/navigation'
 import { PlayProvider } from '@playhtml/react'
 import { LiveSignals } from '@/components/LiveSignals'
 
@@ -12,16 +12,14 @@ type PlayPresenceClientProps = {
 
 export default function PlayPresenceClient({ children }: PlayPresenceClientProps) {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const host = process.env.NEXT_PUBLIC_PLAYHTML_HOST
   const room = useMemo(() => {
-    const base = pathname || '/'
-    const query = searchParams?.toString()
-    return query ? `${base}?${query}` : base
-  }, [pathname, searchParams])
+    return pathname || '/'
+  }, [pathname])
 
   const initOptions = useMemo(
     () => ({
-      host: process.env.NEXT_PUBLIC_PLAYHTML_HOST,
+      host,
       cursors: {
         enabled: true,
         room,
@@ -32,8 +30,18 @@ export default function PlayPresenceClient({ children }: PlayPresenceClientProps
         console.warn('[playhtml] live presence failed to connect')
       },
     }),
-    [room],
+    [host, room],
   )
+
+  useEffect(() => {
+    if (!host && process.env.NODE_ENV === 'development') {
+      console.warn('[playhtml] NEXT_PUBLIC_PLAYHTML_HOST is not set; live presence is disabled')
+    }
+  }, [host])
+
+  if (!host) {
+    return <>{children}</>
+  }
 
   return (
     <PlayProvider initOptions={initOptions} pathname={pathname}>
