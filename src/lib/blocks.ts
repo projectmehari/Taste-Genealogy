@@ -49,13 +49,12 @@ function sortByConnectionPosition<T extends Connectable>(items: T[]) {
   })
 }
 
-function sortBlocksByLatestUpdate(blocks: Block[]) {
-  return [...blocks].sort((a, b) => {
-    const aDate = Date.parse(a.connection?.connected_at ?? a.created_at)
-    const bDate = Date.parse(b.connection?.connected_at ?? b.created_at)
+function timestampForLatestBlockUpdate(block: Block) {
+  return Date.parse(block.updated_at ?? block.created_at ?? block.connection?.connected_at ?? '') || 0
+}
 
-    return bDate - aDate
-  })
+function sortBlocksByLatestUpdate(blocks: Block[]) {
+  return [...blocks].sort((a, b) => timestampForLatestBlockUpdate(b) - timestampForLatestBlockUpdate(a))
 }
 
 function sleep(ms: number) {
@@ -158,7 +157,12 @@ async function loadSiteData(): Promise<SiteData> {
       const items = await getChannelContents(channel.slug)
       const { blocks, channels } = splitContents(items)
 
-      sections.push({ blocks, channel, channels, ownerProfile: await getChannelOwnerProfile(channel) })
+      sections.push({
+        blocks: sortBlocksByLatestUpdate(blocks),
+        channel,
+        channels,
+        ownerProfile: await getChannelOwnerProfile(channel),
+      })
     }
 
     const root = {
@@ -199,7 +203,8 @@ async function loadSiteData(): Promise<SiteData> {
 
   const root = withDisplayTitle(await withArenaRetry('root channel', () => arena.channels.get(getRootChannelSlug())))
   const rootItems = await getChannelContents(root.slug)
-  const { blocks: rootBlocks, channels: rootChannels } = splitContents(rootItems)
+  const { blocks, channels: rootChannels } = splitContents(rootItems)
+  const rootBlocks = sortBlocksByLatestUpdate(blocks)
 
   const data: SiteData = {
     allBlocks: [],
@@ -220,13 +225,13 @@ async function loadSiteData(): Promise<SiteData> {
       const items = await getChannelContents(channel.slug)
       const { blocks, channels } = splitContents(items)
       const section: ChannelSection = {
-        blocks,
+        blocks: sortBlocksByLatestUpdate(blocks),
         channel,
         channels,
         ownerProfile: await getChannelOwnerProfile(channel),
       }
 
-      for (const block of blocks) {
+      for (const block of section.blocks) {
         addBlock(block, channel, data)
       }
 
