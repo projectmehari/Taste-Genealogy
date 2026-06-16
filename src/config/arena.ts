@@ -58,6 +58,7 @@ export function getSiteUrl() {
 
 export const arena = createArena({
   baseUrl: ARENA_API_BASE_URL,
+  token: process.env.ARENA_ACCESS_TOKEN,
   retry: {
     maxRetries: 2,
     respectRateLimits: true,
