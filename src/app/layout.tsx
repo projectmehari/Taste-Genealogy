@@ -26,6 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     description,
+    other: {
+      'virtual-protocol-site-verification': 'bf609212be7316a48669b797e9300e82',
+    },
     metadataBase: new URL(getSiteUrl()),
     openGraph: {
       description,
