@@ -154,6 +154,11 @@ export const FEATURED_CHANNELS = [
     title: 'Jon-Kyle Mohr',
     theme: { light: '#ffd3b6', dark: '#4a2410' },
   },
+  {
+    slug: 'album-covers-kd-fuzlsuyy',
+    title: 'Charis Huling',
+    theme: { light: '#b5e48c', dark: '#1d3a10' },
+  },
 ] satisfies FeaturedChannel[]
 
 export const FEATURED_CHANNEL_SLUGS = FEATURED_CHANNELS.map((channel) => channel.slug)
