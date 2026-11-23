@@ -2,6 +2,7 @@ import 'server-only'
 
 import type { Block, Channel, User } from '@aredotna/sdk'
 import { cache } from 'react'
+import { withArenaRetry } from '@/lib/retry'
 import {
   arena,
   getChannelDisplayTitle,
@@ -55,45 +56,6 @@ function timestampForLatestBlockUpdate(block: Block) {
 
 function sortBlocksByLatestUpdate(blocks: Block[]) {
   return [...blocks].sort((a, b) => timestampForLatestBlockUpdate(b) - timestampForLatestBlockUpdate(a))
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-function retryDelayMs(error: unknown, attempt: number) {
-  const response = (error as { response?: { headers?: { get?: (name: string) => string | null } } })
-    .response
-  const retryAfter = Number(response?.headers?.get?.('retry-after'))
-
-  if (Number.isFinite(retryAfter) && retryAfter > 0) {
-    return retryAfter * 1000
-  }
-
-  return Math.min(90_000, 2000 * 2 ** attempt)
-}
-
-async function withArenaRetry<T>(label: string, load: () => Promise<T>) {
-  let lastError: unknown
-
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    try {
-      return await load()
-    } catch (error) {
-      lastError = error
-      const status = (error as { status?: number }).status
-
-      if (status !== 429 || attempt === 3) {
-        throw error
-      }
-
-      const delay = retryDelayMs(error, attempt)
-      console.warn(`${label} hit Are.na rate limit; retrying in ${Math.round(delay / 1000)}s`)
-      await sleep(delay)
-    }
-  }
-
-  throw lastError
 }
 
 function withDisplayTitle(channel: Channel) {
