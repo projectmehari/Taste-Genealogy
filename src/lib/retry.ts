@@ -1,4 +1,6 @@
-const ARENA_REQUEST_TIMEOUT_MS = 20_000
+// Guards against a stalled socket, not against the SDK's internal rate-limit
+// waiting, hence the generous budget. Anything longer than this is dead.
+const ARENA_REQUEST_TIMEOUT_MS = 45_000
 const ARENA_MAX_ATTEMPTS = 5
 
 function sleep(ms: number) {

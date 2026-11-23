@@ -2,6 +2,7 @@ import 'server-only'
 
 import type { Block, Channel, User } from '@aredotna/sdk'
 import { cache } from 'react'
+import { mapWithConcurrency } from '@/lib/concurrency'
 import { withArenaRetry } from '@/lib/retry'
 import {
   arena,
@@ -106,26 +107,35 @@ function addBlock(
   data.blockContexts.set(block.id, channel)
 }
 
+const CHANNEL_FETCH_CONCURRENCY = 4
+
+async function loadChannelSection(channel: Channel): Promise<ChannelSection> {
+  const items = await getChannelContents(channel.slug)
+  const { blocks, channels } = splitContents(items)
+
+  return {
+    blocks: sortBlocksByLatestUpdate(blocks),
+    channel,
+    channels,
+    ownerProfile: await getChannelOwnerProfile(channel),
+  }
+}
+
 async function loadSiteData(): Promise<SiteData> {
   const configuredChannelSlugs = getConfiguredChannelSlugs()
 
   if (configuredChannelSlugs) {
-    const sections: ChannelSection[] = []
+    const sections = await mapWithConcurrency(
+      configuredChannelSlugs,
+      CHANNEL_FETCH_CONCURRENCY,
+      async (slug) => {
+        const channel = withDisplayTitle(
+          await withArenaRetry(`channel ${slug}`, () => arena.channels.get(slug)),
+        )
 
-    for (const slug of configuredChannelSlugs) {
-      const channel = withDisplayTitle(
-        await withArenaRetry(`channel ${slug}`, () => arena.channels.get(slug)),
-      )
-      const items = await getChannelContents(channel.slug)
-      const { blocks, channels } = splitContents(items)
-
-      sections.push({
-        blocks: sortBlocksByLatestUpdate(blocks),
-        channel,
-        channels,
-        ownerProfile: await getChannelOwnerProfile(channel),
-      })
-    }
+        return loadChannelSection(channel)
+      },
+    )
 
     const root = {
       id: 0,
@@ -182,24 +192,19 @@ async function loadSiteData(): Promise<SiteData> {
     addBlock(block, root, data)
   }
 
-  const sections = await Promise.all(
-    rootChannels.map(async (channel) => {
-      const items = await getChannelContents(channel.slug)
-      const { blocks, channels } = splitContents(items)
-      const section: ChannelSection = {
-        blocks: sortBlocksByLatestUpdate(blocks),
-        channel,
-        channels,
-        ownerProfile: await getChannelOwnerProfile(channel),
-      }
-
-      for (const block of section.blocks) {
-        addBlock(block, channel, data)
-      }
-
-      return section
-    }),
+  const sections = await mapWithConcurrency(
+    rootChannels,
+    CHANNEL_FETCH_CONCURRENCY,
+    (channel) => loadChannelSection(channel),
   )
+
+  // addBlock mutates shared maps, so blocks are folded in sequentially after
+  // the (parallel) fetching finishes, keeping insertion order deterministic.
+  for (const section of sections) {
+    for (const block of section.blocks) {
+      addBlock(block, section.channel, data)
+    }
+  }
 
   data.sectionsBySlug = new Map(sections.map((section) => [section.channel.slug, section]))
 
